@@ -22,17 +22,17 @@ function drawStarPath(ctx, cx, cy, spikes, outerR, innerR) {
 
 function createBrushedMetalTextures() {
   const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 512;
+  canvas.width = 256;
+  canvas.height = 256;
   const ctx = canvas.getContext('2d');
 
   ctx.fillStyle = '#484546';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  for (let i = 0; i < 1800; i++) {
+  for (let i = 0; i < 500; i++) {
     const y = Math.random() * canvas.height;
     const x = Math.random() * canvas.width;
-    const len = 35 + Math.random() * 140;
+    const len = 20 + Math.random() * 75;
     const shade = 52 + Math.floor(Math.random() * 62);
     ctx.strokeStyle = `rgba(${shade + 8}, ${shade}, ${shade}, 0.22)`;
     ctx.lineWidth = 0.7 + Math.random() * 1.1;
@@ -42,7 +42,7 @@ function createBrushedMetalTextures() {
     ctx.stroke();
   }
 
-  for (let i = 0; i < 900; i++) {
+  for (let i = 0; i < 250; i++) {
     const x = Math.random() * canvas.width;
     const y = Math.random() * canvas.height;
     const v = Math.random() > 0.5 ? 165 : 32;
@@ -396,7 +396,7 @@ function createVisorExpressionTexture() {
 }
 
 function buildRetroBodyGeometry() {
-  const geo = new THREE.BoxGeometry(0.76, 0.66, 0.62, 28, 24, 22);
+  const geo = new THREE.BoxGeometry(0.76, 0.66, 0.62, 12, 10, 10);
   const pos = geo.getAttribute('position');
   const v = new THREE.Vector3();
 
@@ -422,6 +422,7 @@ const RobotMascot = ({
   positionX = 0,
   splashActive = false,
   chatOpen = false,
+  paused = false,
   onRobotClick,
   className = 'w-full h-full',
 }) => {
@@ -429,11 +430,20 @@ const RobotMascot = ({
   const splashRef = useRef(splashActive);
   splashRef.current = splashActive;
   const chatOpenRef = useRef(chatOpen);
+  const pausedRef = useRef(paused);
+  const resumeLoopRef = useRef(null);
   const onRobotClickRef = useRef(onRobotClick);
 
   useEffect(() => {
     chatOpenRef.current = chatOpen;
   }, [chatOpen]);
+
+  useEffect(() => {
+    pausedRef.current = paused;
+    if (!paused) {
+      resumeLoopRef.current?.();
+    }
+  }, [paused]);
 
   useEffect(() => {
     onRobotClickRef.current = onRobotClick;
@@ -774,8 +784,15 @@ const RobotMascot = ({
 
     const clock = new THREE.Clock();
     let animFrameId = null;
+    let isDestroyed = false;
+
+    const shouldRun = () => !isDestroyed && !document.hidden && !pausedRef.current;
 
     function animate() {
+      if (!shouldRun()) {
+        animFrameId = null;
+        return;
+      }
       animFrameId = requestAnimationFrame(animate);
       const dt = Math.max(0.001, Math.min(0.05, clock.getDelta()));
       const now = clock.getElapsedTime();
@@ -910,10 +927,30 @@ const RobotMascot = ({
       renderer.render(scene, camera);
     }
 
-    animate();
+    const startLoop = () => {
+      if (animFrameId !== null || !shouldRun()) return;
+      clock.getDelta();
+      animate();
+    };
+
+    resumeLoopRef.current = startLoop;
+
+    const onVisibilityChange = () => {
+      if (!document.hidden) {
+        startLoop();
+      }
+    };
+
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    startLoop();
 
     return () => {
-      cancelAnimationFrame(animFrameId);
+      isDestroyed = true;
+      resumeLoopRef.current = null;
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      if (animFrameId !== null) {
+        cancelAnimationFrame(animFrameId);
+      }
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('click', onClick);
       window.removeEventListener('resize', onResize);

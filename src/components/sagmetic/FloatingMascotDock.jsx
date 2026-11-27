@@ -1,127 +1,85 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import RobotMascot from "../robotmascot/RobotMascot";
-import ChatbotPopup from "./ChatbotPopup";
+
+const RobotMascot = lazy(() => import("../robotmascot/RobotMascot"));
+const ChatbotPopup = lazy(() => import("./ChatbotPopup"));
 
 export default function FloatingMascotDock({
   footerRef,
-  splashHoldMs = 1100,
-  settleDuration = 1.45,
   onSplashComplete,
 }) {
   const dockRef = useRef(null);
-  const backdropRef = useRef(null);
   const completedRef = useRef(false);
   const onCompleteRef = useRef(onSplashComplete);
   onCompleteRef.current = onSplashComplete;
 
   const [hiddenAtFooter, setHiddenAtFooter] = useState(false);
-  const [splashActive, setSplashActive] = useState(true);
+  const [robotReady, setRobotReady] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [hasOpenedChat, setHasOpenedChat] = useState(false);
 
-  const finishSplash = () => {
-    setSplashActive(false);
-    window.dispatchEvent(new Event("resize"));
+  const openChat = () => {
+    setHasOpenedChat(true);
+    setChatOpen(true);
+  };
+
+  const toggleChat = () => {
+    setHasOpenedChat(true);
+    setChatOpen((prev) => !prev);
+  };
+
+  const prefetchChat = () => {
+    import("./ChatbotPopup");
+  };
+
+  useEffect(() => {
     if (!completedRef.current) {
       completedRef.current = true;
       onCompleteRef.current?.();
     }
-  };
 
-  useEffect(() => {
     const dockEl = dockRef.current;
-    const backdropEl = backdropRef.current;
     if (!dockEl) return;
 
-    if (window.innerWidth < 1024) {
-      gsap.set(dockEl, {
-        x: 0,
-        y: 0,
-        scale: 1,
-        autoAlpha: 1,
-      });
-      if (backdropEl) gsap.set(backdropEl, { autoAlpha: 0 });
-      finishSplash();
-      return;
-    }
-
-    const totalMs =
-      Math.round((splashHoldMs / 1000 + settleDuration) * 1000) + 120;
-    const fallbackTimer = window.setTimeout(() => {
-      finishSplash();
-    }, totalMs);
-
     const ctx = gsap.context(() => {
-      gsap.set(dockEl, {
-        x: 0,
-        y: 0,
-        scale: 1,
-        transformOrigin: "center center",
-      });
-
-      const rect = dockEl.getBoundingClientRect();
-      const centerOffsetX = window.innerWidth / 2 - (rect.left + rect.width / 2);
-      const centerOffsetY = window.innerHeight / 2 - (rect.top + rect.height / 2);
-
-      gsap.set(dockEl, {
-        x: centerOffsetX,
-        y: centerOffsetY,
-        scale: 2.0,
-        transformOrigin: "center center",
-        autoAlpha: 1,
-      });
-
-      if (backdropEl) {
-        gsap.set(backdropEl, { autoAlpha: 1 });
-      }
-
-      const tl = gsap.timeline({
-        delay: splashHoldMs / 1000,
-        onComplete: () => {
-          window.clearTimeout(fallbackTimer);
-          finishSplash();
-        },
-      });
-
-      const earlyTriggerOffset = Math.max(0.1, settleDuration - 0.3);
-
-      tl.to(
+      gsap.fromTo(
         dockEl,
+        { y: 18, scale: 0.9, autoAlpha: 0 },
         {
-          x: 0,
           y: 0,
           scale: 1,
-          duration: settleDuration,
-          ease: "power3.inOut",
+          autoAlpha: 1,
+          duration: 0.45,
+          ease: "power3.out",
         },
-        0,
-      ).call(
-        () => {
-          window.clearTimeout(fallbackTimer);
-          finishSplash();
-        },
-        null,
-        earlyTriggerOffset,
       );
-
-      if (backdropEl) {
-        tl.to(
-          backdropEl,
-          {
-            autoAlpha: 0,
-            duration: settleDuration * 0.78,
-            ease: "power2.out",
-          },
-          0.25,
-        );
-      }
     });
 
     return () => {
-      window.clearTimeout(fallbackTimer);
       ctx.revert();
     };
-  }, [splashHoldMs, settleDuration]);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const enableRobot = () => {
+      if (!cancelled) setRobotReady(true);
+    };
+
+    if (typeof window.requestIdleCallback === "function") {
+      const idleId = window.requestIdleCallback(enableRobot, { timeout: 350 });
+      return () => {
+        cancelled = true;
+        window.cancelIdleCallback(idleId);
+      };
+    }
+
+    const timerId = window.setTimeout(enableRobot, 120);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timerId);
+    };
+  }, []);
 
   useEffect(() => {
     const checkVisibility = () => {
@@ -152,11 +110,11 @@ export default function FloatingMascotDock({
 
   useEffect(() => {
     const dockEl = dockRef.current;
-    if (!dockEl || splashActive) return;
+    if (!dockEl) return;
 
     const updateDockPosition = () => {
       const canShowSideBySide = window.innerWidth >= 768;
-      const slideLeft = chatOpen && canShowSideBySide ? -368 : 0;
+      const slideLeft = chatOpen && canShowSideBySide ? -396 : 0;
       const hideWithOverlayChat = chatOpen && !canShowSideBySide;
       const shouldHide = hiddenAtFooter || hideWithOverlayChat;
 
@@ -174,50 +132,42 @@ export default function FloatingMascotDock({
     updateDockPosition();
     window.addEventListener("resize", updateDockPosition);
     return () => window.removeEventListener("resize", updateDockPosition);
-  }, [hiddenAtFooter, splashActive, chatOpen]);
+  }, [hiddenAtFooter, chatOpen]);
 
   return (
     <>
-      <div
-        ref={backdropRef}
-        aria-hidden={!splashActive}
-        className={`hidden lg:flex fixed inset-0 bg-[#050303] items-end justify-center pb-10 ${
-          splashActive ? "z-40 pointer-events-auto" : "z-40 pointer-events-none"
-        }`}
-      >
-        <span
-          className="text-[11px] uppercase tracking-[0.28em] text-zinc-400"
-          style={{ fontFamily: "'Montserrat', sans-serif" }}
-        >
-          Sagmetic Infotech
-        </span>
-      </div>
-
-      <ChatbotPopup isOpen={chatOpen} onClose={() => setChatOpen(false)} />
+      {hasOpenedChat ? (
+        <Suspense fallback={null}>
+          <ChatbotPopup isOpen={chatOpen} onClose={() => setChatOpen(false)} />
+        </Suspense>
+      ) : null}
 
       <div
         ref={dockRef}
-        aria-hidden={hiddenAtFooter && !splashActive}
-        className={`fixed bottom-3 right-3 sm:bottom-4 sm:right-4 w-[108px] h-[96px] sm:w-[136px] sm:h-[120px] md:w-[156px] md:h-[138px] xl:w-[185px] xl:h-[160px] 2xl:w-[215px] 2xl:h-[185px] will-change-transform ${
-          splashActive ? "z-50" : "z-40"
-        } ${hiddenAtFooter && !splashActive ? "pointer-events-none" : ""}`}
+        aria-hidden={hiddenAtFooter}
+        onPointerEnter={prefetchChat}
+        onFocus={prefetchChat}
+        className={`fixed bottom-3 right-3 sm:bottom-4 sm:right-4 w-[108px] h-[96px] sm:w-[136px] sm:h-[120px] md:w-[156px] md:h-[138px] xl:w-[185px] xl:h-[160px] 2xl:w-[215px] 2xl:h-[185px] z-40 will-change-transform ${
+          hiddenAtFooter ? "pointer-events-none" : ""
+        }`}
       >
-        <RobotMascot
-          positionX={0}
-          splashActive={splashActive}
-          chatOpen={chatOpen}
-          onRobotClick={() => {
-            if (!splashActive) {
-              setChatOpen((prev) => !prev);
-            }
-          }}
-          className="w-full h-full"
-        />
+        {robotReady ? (
+          <Suspense fallback={null}>
+            <RobotMascot
+              positionX={0}
+              splashActive={false}
+              chatOpen={chatOpen}
+              paused={hiddenAtFooter}
+              onRobotClick={toggleChat}
+              className="w-full h-full"
+            />
+          </Suspense>
+        ) : null}
 
-        {!splashActive && !chatOpen && (
+        {!chatOpen && (
           <button
             type="button"
-            onClick={() => setChatOpen(true)}
+            onClick={openChat}
             aria-label="Open Sagmetic AI chat"
             style={{ fontFamily: "'Montserrat', sans-serif" }}
             className="lg:hidden absolute -bottom-1 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-[#0d0707]/90 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-medium text-zinc-200 shadow-lg whitespace-nowrap cursor-pointer"

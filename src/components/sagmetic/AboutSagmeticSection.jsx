@@ -386,6 +386,10 @@ export default function AboutSagmeticSection({
                   src="/images/logo.png"
                   alt=""
                   aria-hidden="true"
+                  width="260"
+                  height="47"
+                  loading="lazy"
+                  decoding="async"
                   className="max-h-11 w-auto object-contain"
                 />
               </div>

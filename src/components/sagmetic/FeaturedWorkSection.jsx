@@ -12,7 +12,7 @@ export default function FeaturedWorkSection({
   descriptionText =
     "Real products, real impact — powered by modern technology and AI.",
   buttonText = "Explore Case Studies",
-  showcaseImage = "/images/featuredshowcase.png",
+  showcaseImage = "/images/featuredshowcase.webp",
   onExploreClick,
 }) {
   const sectionRef = useRef(null);
@@ -229,6 +229,10 @@ export default function FeaturedWorkSection({
             <img
               src={showcaseImage}
               alt="Featured AI-enabled digital solution"
+              width="1784"
+              height="499"
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover object-center"
             />
             <div

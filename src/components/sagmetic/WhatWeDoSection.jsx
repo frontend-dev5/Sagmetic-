@@ -10,45 +10,45 @@ const SERVICES = [
     id: "website-design",
     index: "01",
     label: "WEBSITE DESIGN",
-    emblem: "/images/w.png",
+    emblem: "/images/w.webp",
   },
   {
     id: "website-development",
     index: "02",
     label: "WEBSITE DEVELOPMENT",
-    emblem: "/images/w.png",
+    emblem: "/images/w.webp",
   },
   {
     id: "app-development",
     index: "03",
     label: "APP DEVELOPMENT",
-    emblem: "/images/w.png",
+    emblem: "/images/w.webp",
   },
   {
     id: "ai-solutions-integration",
     index: "04",
     label: "AI SOLUTIONS & INTEGRATION",
-    emblem: "/images/w.png",
+    emblem: "/images/w.webp",
   },
   {
     id: "search-engine-optimization",
     index: "05",
     label: "SEARCH ENGINE OPTIMIZATION",
-    emblem: "/images/w.png",
+    emblem: "/images/w.webp",
   },
 ];
 
 const TECH_STACK = [
-  { name: "React", logo: "/images/react.png" },
-  { name: "NEXT.js", logo: "/images/nextjs.png" },
-  { name: "TypeScript", logo: "/images/typescript.png" },
-  { name: "JavaScript", logo: "/images/javascript.png" },
-  { name: "python", logo: "/images/python.png" },
-  { name: "OpenAI", logo: "/images/openai.png" },
-  { name: "LangChain", logo: "/images/langchain.png" },
-  { name: "LlamaIndex", logo: "/images/llamaindex.png" },
-  { name: "TensorFlow", logo: "/images/tensorflow.png" },
-  { name: "Firebase", logo: "/images/firebase.png" },
+  { name: "React", logo: "/images/react.png", width: 152, height: 48 },
+  { name: "NEXT.js", logo: "/images/nextjs.png", width: 171, height: 42 },
+  { name: "TypeScript", logo: "/images/typescript.png", width: 157, height: 42 },
+  { name: "JavaScript", logo: "/images/javascript.png", width: 169, height: 42 },
+  { name: "python", logo: "/images/python.png", width: 189, height: 48 },
+  { name: "OpenAI", logo: "/images/openai.png", width: 153, height: 42 },
+  { name: "LangChain", logo: "/images/langchain.png", width: 187, height: 32 },
+  { name: "LlamaIndex", logo: "/images/llamaindex.png", width: 185, height: 59 },
+  { name: "TensorFlow", logo: "/images/tensorflow.png", width: 197, height: 41 },
+  { name: "Firebase", logo: "/images/firebase.png", width: 177, height: 58 },
 ];
 
 export default function WhatWeDoSection({
@@ -256,8 +256,12 @@ const scrambleServiceLabel = (index, targetText) => {
             className="pointer-events-none hidden md:flex items-center justify-center absolute right-[8%] lg:right-[14%] w-[210px] h-[210px] z-20 transition-[top] duration-300 ease-out will-change-transform"
           >
             <img
-              src={currentService?.emblem || "/images/w.png"}
+              src={currentService?.emblem || "/images/w.webp"}
               alt=""
+              width="352"
+              height="313"
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-contain drop-shadow-[0_22px_28px_rgba(0,0,0,0.28)]"
             />
           </div>
@@ -344,6 +348,10 @@ const scrambleServiceLabel = (index, targetText) => {
                 <img
                   src={tech.logo}
                   alt={tech.name}
+                  width={tech.width}
+                  height={tech.height}
+                  loading="lazy"
+                  decoding="async"
                   className="max-h-8 sm:max-h-9 w-auto object-contain opacity-85 hover:opacity-100 transition-opacity"
                 />
               ) : (

@@ -79,7 +79,7 @@ const WORKFLOW_STEPS = [
 ];
 
 export default function AiWorkflowSection({
-  studioImage = "/images/aiworkflow.png",
+  studioImage = "/images/aiworkflow.webp",
   steps = WORKFLOW_STEPS,
 }) {
   const sectionRef = useRef(null);
@@ -209,6 +209,10 @@ export default function AiWorkflowSection({
         <img
           src={studioImage}
           alt="Engineering and design team collaborating on AI digital products"
+          width="1920"
+          height="969"
+          loading="lazy"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
 

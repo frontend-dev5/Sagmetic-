@@ -39,14 +39,12 @@ export default function SplitHeadline({ agencyRef, splashDone = true }) {
 
         gsap.fromTo(
           root,
-          { x: -64, opacity: 0, visibility: 'visible' },
+          { x: -24 },
           {
             x: 0,
-            opacity: 1,
-            visibility: 'visible',
-            duration: 0.9,
+            duration: 0.65,
             ease: 'power3.out',
-            clearProps: 'transform,opacity,visibility',
+            clearProps: 'transform',
           }
         );
 
@@ -54,19 +52,15 @@ export default function SplitHeadline({ agencyRef, splashDone = true }) {
           gsap.fromTo(
             allChars,
             {
-              y: (idx) => (idx % 2 === 0 ? -36 : 36),
-              opacity: 0,
-              visibility: 'visible',
+              y: (idx) => (idx % 2 === 0 ? -18 : 18),
             },
             {
               y: 0,
-              opacity: 1,
-              visibility: 'visible',
-              duration: 0.75,
-              delay: 0.08,
-              stagger: { each: 0.025, from: 'start' },
+              duration: 0.6,
+              delay: 0.04,
+              stagger: { each: 0.02, from: 'start' },
               ease: 'power3.out',
-              clearProps: 'transform,opacity,visibility',
+              clearProps: 'transform',
             }
           );
         }
@@ -87,7 +81,6 @@ export default function SplitHeadline({ agencyRef, splashDone = true }) {
   return (
     <h1
       ref={headingRef}
-      style={{ opacity: splashDone ? undefined : 0 }}
       className="overflow-visible font-futura-headline font-extrabold text-white text-[56px] leading-[54px] sm:text-[104px] sm:leading-[96px] lg:text-[166px] lg:leading-[148px]"
     >
       <span ref={boldLine1Ref} className="block">

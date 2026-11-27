@@ -126,7 +126,7 @@ const STAT_CARDS = [
 ];
 
 export default function StatsAndCtaSection({
-  ctaBgImage = "/images/ctabg.png",
+  ctaBgImage = "/images/ctabg.webp",
   onConsultationClick,
 }) {
   const sectionRef = useRef(null);
@@ -415,6 +415,10 @@ export default function StatsAndCtaSection({
             src={ctaBgImage}
             alt=""
             aria-hidden="true"
+            width="1440"
+            height="790"
+            loading="lazy"
+            decoding="async"
             className="pointer-events-none absolute inset-0 w-full h-full object-cover object-center will-change-transform"
           />
           <div

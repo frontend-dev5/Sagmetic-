@@ -6,7 +6,7 @@ import { SplitText } from "gsap/SplitText";
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 export default function ExpertiseSpotlightSection({
-  imageSrc = "/images/section4.png",
+  imageSrc = "/images/section4.webp",
   badgeText = "AI • Development",
   headingText = "Web & Mobile Development",
   descriptionText =
@@ -267,6 +267,10 @@ export default function ExpertiseSpotlightSection({
         <img
           src={imageSrc}
           alt={headingText}
+          width="1798"
+          height="828"
+          loading="lazy"
+          decoding="async"
           className="pointer-events-none absolute inset-0 w-full h-full object-cover object-center z-0"
         />
 

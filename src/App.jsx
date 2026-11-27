@@ -1,16 +1,7 @@
 
 import './App.css'
-import './plush/face.css'
-import PlushPortrait from './components/PlushPortrait'
-import IndieApp from './components/indiemaker/IndieApp'
-import ShibaMascot from './components/Shiba/ShibaMascot'
-import MochiMascot from './components/mochimascot/MochiMascot'
-import RobotMascot from './components/robotmascot/RobotMascot'
 import { useRef, useState } from 'react'
-import Sagmetic from './components/sagmetic/Sagmetic'
-import AgencyLogoHero from './components/sagmetic/AgencyHeroSculpture'
 import SagmeticHero from './components/sagmetic/SagmeticHero'
-import AiCircuitHeroBg from './components/sagmetic/AiChipCurrentBg'
 import AboutSagmeticSection from './components/sagmetic/AboutSagmeticSection'
 import TechnologyExpertiseSection from './components/sagmetic/TechnologyExpertiseSection'
 import ExpertiseSpotlightSection from './components/sagmetic/ExpertiseSpotlightSection'
@@ -25,7 +16,6 @@ import FloatingMascotDock from './components/sagmetic/FloatingMascotDock'
 
 
 export default function App() {
-  const [active, setActive] = useState('robot');
   const [splashDone, setSplashDone] = useState(false);
   const footerRef = useRef(null);
 

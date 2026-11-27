@@ -495,7 +495,7 @@ export function getFallbackReply(input) {
   ) {
     return {
       reply:
-        "Hello! Are you looking to build a new AI-powered product, add AI to an existing app, or redesign your site?",
+        "Hey! Here's how we can help:\n- **AI Systems:** Custom chatbots, RAG & automation\n- **Web & Apps:** High-performance digital products\n- **Project Scope:** Timeline & consultation details",
     };
   }
 
@@ -504,11 +504,12 @@ export function getFallbackReply(input) {
     q.includes("what do you do") ||
     q.includes("offer") ||
     q.includes("ai solution") ||
+    q.includes("ai system") ||
     q.includes("build")
   ) {
     return {
       reply:
-        "We design and build websites, mobile apps, custom AI agents & RAG chatbots, generative AI tools, and workflow automation — plus SEO.",
+        "We build end-to-end AI & digital products:\n- **AI Chatbots & RAG:** Domain-trained assistants\n- **AI Automation:** Support & workflow pipelines\n- **Generative AI:** Custom content & media tools\n- **Web & Mobile:** Design, development & SEO",
       action: { label: "View services", href: "#what-we-do" },
     };
   }
@@ -521,7 +522,7 @@ export function getFallbackReply(input) {
   ) {
     return {
       reply:
-        "Yes — we audit your architecture and integrate smart search, RAG assistants, or automated AI pipelines directly into your existing product.",
+        "Yes — we integrate AI into existing products smoothly:\n- **Architecture Audit:** Map data flows & UI touchpoints\n- **Smart Features:** Add RAG search, copilots & automation\n- **Zero Disruption:** Built safely around current users",
       action: { label: "See AI case studies", href: "#case-study" },
     };
   }
@@ -537,7 +538,7 @@ export function getFallbackReply(input) {
   ) {
     return {
       reply:
-        "We build with React, Next.js, TypeScript, Python, Node.js, Tailwind CSS, GSAP, Three.js, OpenAI, LangChain, LlamaIndex, TensorFlow, and Firebase. Focused MVPs take 3–6 weeks; full products take 6–12 weeks.",
+        "Our core engineering stack:\n- **Frontend:** React, Next.js, TypeScript, Tailwind, GSAP, Three.js\n- **Backend:** Python, Node.js, Firebase, AWS\n- **AI & ML:** OpenAI, LangChain, LlamaIndex, TensorFlow",
       action: { label: "View tech stack", href: "#what-we-do" },
     };
   }
@@ -547,11 +548,14 @@ export function getFallbackReply(input) {
     q.includes("long") ||
     q.includes("duration") ||
     q.includes("week") ||
+    q.includes("fast") ||
+    q.includes("mvp") ||
+    q.includes("ship") ||
     q.includes("process")
   ) {
     return {
       reply:
-        "Focused AI integrations or MVPs take 3–6 weeks, and full-scale products take 6–12 weeks using our 3-step workflow: Discover, Design, and Build.",
+        "Typical delivery timelines & process:\n- **AI Integrations / MVPs:** 3–6 weeks\n- **Full Web/App Products:** 6–12 weeks\n- **Workflow:** 01 Discover → 02 Design → 03 Build",
       action: { label: "See workflow", href: "#ai-workflow" },
     };
   }
@@ -568,6 +572,7 @@ export function getFallbackReply(input) {
     q.includes("meeting") ||
     q.includes("start") ||
     q.includes("project") ||
+    q.includes("talk") ||
     q.includes("call") ||
     q.includes("email") ||
     q.includes("phone") ||
@@ -580,7 +585,7 @@ export function getFallbackReply(input) {
     });
     return {
       reply:
-        "You can reach Sagmetic Infotech directly below or share your project details in our contact form for a free consultation.",
+        "Let's get your project moving:\n- **Free Consultation:** Share your goals in our contact form\n- **Direct Contact:** Reach us via email or phone below\n- **Next Step:** Scope, timeline & AI architecture plan",
       action: { label: "Open contact form", href: "#contact" },
       contactCard: uiPatch.contactCard,
     };
@@ -588,7 +593,7 @@ export function getFallbackReply(input) {
 
   return {
     reply:
-      "I can help with Sagmetic's AI services, tech stack, timelines, or getting in touch with our team.",
+      "Here's what I can help with:\n- **AI Solutions:** Agents, RAG & workflow automation\n- **Engineering:** Web, mobile apps & tech stack\n- **Getting Started:** Timelines & direct contact",
     action: { label: "Contact Sagmetic", href: "#contact" },
   };
 }

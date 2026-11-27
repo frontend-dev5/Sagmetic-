@@ -10,25 +10,33 @@ const CASE_STUDIES = [
     id: "ai-product-development",
     title: "AI Product Development",
     description: "Build next-gen products with AI at the core.",
-    image: "/images/aiproductdevelopment.png",
+    image: "/images/aiproductdevelopment.webp",
+    width: 542,
+    height: 412,
   },
   {
     id: "generative-ai-solutions",
     title: "Generative AI Solutions",
     description: "Content, images, and media generation for your brand.",
-    image: "/images/generativeai.png",
+    image: "/images/generativeai.webp",
+    width: 542,
+    height: 412,
   },
   {
     id: "ai-automation",
     title: "AI Automation",
     description: "Automate operations, support and business workflows.",
-    image: "/images/aiautomation.png",
+    image: "/images/aiautomation.webp",
+    width: 542,
+    height: 412,
   },
   {
     id: "ai-chatbots-agents",
     title: "AI Chatbots & Assistants",
     description: "Smart, domain-trained chatbots for your business.",
-    image: "/images/aichatbots.png",
+    image: "/images/aichatbots.webp",
+    width: 1320,
+    height: 753,
   },
 ];
 
@@ -282,6 +290,10 @@ export default function AiSolutionsCaseStudySection({
                   <img
                     src={item.image}
                     alt={item.title}
+                    width={item.width}
+                    height={item.height}
+                    loading="lazy"
+                    decoding="async"
                     draggable={false}
                     className="w-full h-full object-cover object-center transition-transform duration-500 ease-out group-hover:scale-105"
                   />

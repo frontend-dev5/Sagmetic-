@@ -48,7 +48,7 @@ const FOOTER_COLUMNS = [
 ];
 
 export default function ContactAndFooterSection({
-  sideBoxBgImage = "/images/contact-side-bg.png",
+  sideBoxBgImage = null,
   onSubmitForm,
 }) {
   const sectionRef = useRef(null);
@@ -421,6 +421,10 @@ export default function ContactAndFooterSection({
                 <img
                   src="/images/logo.png"
                   alt="Sagmetic Infotech"
+                  width="260"
+                  height="47"
+                  loading="lazy"
+                  decoding="async"
                   className="h-12 sm:h-14 w-auto object-contain"
                 />
               </a>

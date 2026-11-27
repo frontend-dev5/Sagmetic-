@@ -31,6 +31,19 @@ function sagmeticChatApiPlugin(mode) {
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss(), sagmeticChatApiPlugin(mode)],
+  build: {
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            { name: 'react-vendor', test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/ },
+            { name: 'gsap-vendor', test: /node_modules[\\/]gsap[\\/]/ },
+            { name: 'three-vendor', test: /node_modules[\\/]three[\\/]/ },
+          ],
+        },
+      },
+    },
+  },
   server: {
     host: true,
     allowedHosts: NGROK_ALLOWED_HOSTS,

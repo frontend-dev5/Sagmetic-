@@ -38,22 +38,13 @@ const SagmeticHero = ({
   const taglineRef = useRef(null);
 
   const resolvedDelay =
-    typeof splashDelaySeconds === "number"
-      ? splashDelaySeconds
-      : typeof window !== "undefined" && window.innerWidth >= 1024
-      ? 2.3
-      : 0;
+    typeof splashDelaySeconds === "number" ? splashDelaySeconds : 0;
 
   useEffect(() => {
     const rootEl = heroRef.current;
     if (!rootEl) return;
 
     const ctx = gsap.context(() => {
-      gsap.set('[data-hero-stagger="true"]', {
-        y: 28,
-        opacity: 0,
-      });
-
       if (agencyRef.current) {
         gsap.to(agencyRef.current, {
           y: -18,
@@ -76,26 +67,29 @@ const SagmeticHero = ({
     if (!rootEl || !splashDone) return;
 
     const ctx = gsap.context(() => {
-      gsap.to('[data-hero-stagger="true"]', {
-        y: 0,
-        opacity: 1,
-        duration: 0.85,
-        stagger: 0.1,
-        delay: resolvedDelay,
-        ease: "power3.out",
-        clearProps: "transform",
-      });
+      gsap.fromTo(
+        '[data-hero-stagger="true"]',
+        { y: 12 },
+        {
+          y: 0,
+          duration: 0.55,
+          stagger: 0.08,
+          delay: resolvedDelay,
+          ease: "power3.out",
+          clearProps: "transform",
+        },
+      );
 
       if (taglineRef.current) {
         gsap.to(taglineRef.current, {
-          duration: 1.7,
-          delay: resolvedDelay + 0.15,
+          duration: 1.2,
+          delay: resolvedDelay + 0.08,
           ease: "power2.out",
           scrambleText: {
             text: TAGLINE_TEXT,
             chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ×/&#",
-            revealDelay: 0.25,
-            speed: 0.25,
+            revealDelay: 0.2,
+            speed: 0.28,
           },
         });
       }
@@ -127,7 +121,14 @@ const SagmeticHero = ({
       <header className="relative z-30 max-w-[1360px] w-full mx-auto px-4 pt-6">
         <nav className="flex items-center justify-between rounded-full border border-white/[0.09] bg-[#0d0707]/80 px-5 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.65)]">
           <a href="#home" className="flex items-center gap-2.5">
-            <img className="md:w-auto w-50" src="/images/logo.png" alt="logo" />
+            <img
+              className="md:w-auto w-50"
+              src="/images/logo.png"
+              alt="Sagmetic Infotech"
+              width="260"
+              height="47"
+              decoding="async"
+            />
           </a>
 
           <ul className="hidden md:flex items-center gap-7 text-[12px] font-medium text-zinc-400">
