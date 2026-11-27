@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import RobotMascot from "../robotmascot/RobotMascot";
+import ChatbotPopup from "./ChatbotPopup";
 
 export default function FloatingMascotDock({
   footerRef,
@@ -16,6 +17,7 @@ export default function FloatingMascotDock({
 
   const [hiddenAtFooter, setHiddenAtFooter] = useState(false);
   const [splashActive, setSplashActive] = useState(true);
+  const [chatOpen, setChatOpen] = useState(false);
 
   const finishSplash = () => {
     setSplashActive(false);
@@ -33,8 +35,7 @@ export default function FloatingMascotDock({
 
     if (window.innerWidth < 1024) {
       gsap.set(dockEl, {
-        xPercent: -50,
-        yPercent: 0,
+        x: 0,
         y: 0,
         scale: 1,
         autoAlpha: 1,
@@ -52,11 +53,21 @@ export default function FloatingMascotDock({
 
     const ctx = gsap.context(() => {
       gsap.set(dockEl, {
-        xPercent: -50,
-        yPercent: -36,
+        x: 0,
         y: 0,
-        scale: 1.75,
-        transformOrigin: "center bottom",
+        scale: 1,
+        transformOrigin: "center center",
+      });
+
+      const rect = dockEl.getBoundingClientRect();
+      const centerOffsetX = window.innerWidth / 2 - (rect.left + rect.width / 2);
+      const centerOffsetY = window.innerHeight / 2 - (rect.top + rect.height / 2);
+
+      gsap.set(dockEl, {
+        x: centerOffsetX,
+        y: centerOffsetY,
+        scale: 2.0,
+        transformOrigin: "center center",
         autoAlpha: 1,
       });
 
@@ -77,7 +88,7 @@ export default function FloatingMascotDock({
       tl.to(
         dockEl,
         {
-          yPercent: 0,
+          x: 0,
           y: 0,
           scale: 1,
           duration: settleDuration,
@@ -114,11 +125,6 @@ export default function FloatingMascotDock({
 
   useEffect(() => {
     const checkVisibility = () => {
-      if (window.innerWidth < 1024) {
-        setHiddenAtFooter(true);
-        return;
-      }
-
       const footerEl = footerRef?.current;
       const nearBottomOfPage =
         window.scrollY + window.innerHeight >=
@@ -146,16 +152,29 @@ export default function FloatingMascotDock({
 
   useEffect(() => {
     const dockEl = dockRef.current;
-    if (!dockEl || splashActive || window.innerWidth < 1024) return;
+    if (!dockEl || splashActive) return;
 
-    gsap.to(dockEl, {
-      autoAlpha: hiddenAtFooter ? 0 : 1,
-      y: hiddenAtFooter ? 18 : 0,
-      duration: 0.35,
-      ease: "power2.out",
-      overwrite: "auto",
-    });
-  }, [hiddenAtFooter, splashActive]);
+    const updateDockPosition = () => {
+      const canShowSideBySide = window.innerWidth >= 768;
+      const slideLeft = chatOpen && canShowSideBySide ? -368 : 0;
+      const hideWithOverlayChat = chatOpen && !canShowSideBySide;
+      const shouldHide = hiddenAtFooter || hideWithOverlayChat;
+
+      gsap.to(dockEl, {
+        x: slideLeft,
+        y: shouldHide ? 18 : 0,
+        scale: chatOpen && canShowSideBySide ? 0.9 : 1,
+        autoAlpha: shouldHide ? 0 : 1,
+        duration: 0.38,
+        ease: "power3.out",
+        overwrite: "auto",
+      });
+    };
+
+    updateDockPosition();
+    window.addEventListener("resize", updateDockPosition);
+    return () => window.removeEventListener("resize", updateDockPosition);
+  }, [hiddenAtFooter, splashActive, chatOpen]);
 
   return (
     <>
@@ -174,18 +193,39 @@ export default function FloatingMascotDock({
         </span>
       </div>
 
+      <ChatbotPopup isOpen={chatOpen} onClose={() => setChatOpen(false)} />
+
       <div
         ref={dockRef}
         aria-hidden={hiddenAtFooter && !splashActive}
-        className={`hidden lg:block fixed bottom-3 sm:bottom-5 left-1/2 w-[190px] h-[165px] xl:w-[240px] xl:h-[210px] 2xl:w-[310px] 2xl:h-[265px] will-change-transform ${
+        className={`fixed bottom-3 right-3 sm:bottom-4 sm:right-4 w-[108px] h-[96px] sm:w-[136px] sm:h-[120px] md:w-[156px] md:h-[138px] xl:w-[185px] xl:h-[160px] 2xl:w-[215px] 2xl:h-[185px] will-change-transform ${
           splashActive ? "z-50" : "z-40"
         } ${hiddenAtFooter && !splashActive ? "pointer-events-none" : ""}`}
       >
         <RobotMascot
           positionX={0}
           splashActive={splashActive}
+          chatOpen={chatOpen}
+          onRobotClick={() => {
+            if (!splashActive) {
+              setChatOpen((prev) => !prev);
+            }
+          }}
           className="w-full h-full"
         />
+
+        {!splashActive && !chatOpen && (
+          <button
+            type="button"
+            onClick={() => setChatOpen(true)}
+            aria-label="Open Sagmetic AI chat"
+            style={{ fontFamily: "'Montserrat', sans-serif" }}
+            className="lg:hidden absolute -bottom-1 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-[#0d0707]/90 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-medium text-zinc-200 shadow-lg whitespace-nowrap cursor-pointer"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#63e6be]" />
+            <span>Ask AI</span>
+          </button>
+        )}
       </div>
     </>
   );

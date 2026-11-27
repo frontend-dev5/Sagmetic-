@@ -250,11 +250,12 @@ function createVisorExpressionTexture() {
     ctx.restore();
   }
 
-  function getTargetCaption({ annoyed, dizzy, poke, sleepy, tracking, splashActive }) {
+  function getTargetCaption({ annoyed, dizzy, poke, sleepy, tracking, splashActive, chatOpen }) {
     if (dizzy > 0.12) return 'WOOAAH... REBOUNDING!';
     if (poke > 0.12) return 'BOOP! SERVOS READY';
     if (annoyed > 0.14) return 'HEY! EASY ON THE SHELL';
     if (splashActive) return 'HELLO HUMAN :)';
+    if (chatOpen) return 'ASK ME ANYTHING!';
     if (sleepy > 0.25) return 'LOW BATTERY // ZZZ';
     if (tracking) return 'HELLO HUMAN :)';
     return 'LOW BATTERY // ZZZ';
@@ -285,6 +286,7 @@ function createVisorExpressionTexture() {
     sleepy = 0,
     tracking = false,
     splashActive = false,
+    chatOpen = false,
     time,
     dt = 0.016,
   }) {
@@ -295,6 +297,7 @@ function createVisorExpressionTexture() {
       sleepy,
       tracking,
       splashActive,
+      chatOpen,
     });
 
     if (!activeCaption) {
@@ -418,11 +421,23 @@ function buildRetroBodyGeometry() {
 const RobotMascot = ({
   positionX = 0,
   splashActive = false,
+  chatOpen = false,
+  onRobotClick,
   className = 'w-full h-full',
 }) => {
   const containerRef = useRef(null);
   const splashRef = useRef(splashActive);
   splashRef.current = splashActive;
+  const chatOpenRef = useRef(chatOpen);
+  const onRobotClickRef = useRef(onRobotClick);
+
+  useEffect(() => {
+    chatOpenRef.current = chatOpen;
+  }, [chatOpen]);
+
+  useEffect(() => {
+    onRobotClickRef.current = onRobotClick;
+  }, [onRobotClick]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -680,7 +695,7 @@ const RobotMascot = ({
     const targetBulbEmissive = new THREE.Color();
     const dizzyMixColor = new THREE.Color();
 
-    const hitMeshes = [bodyMesh, visorMesh, capL, capR, bulbMesh];
+    const hitMeshes = [bodyMesh, visorMesh, capL, capR, bulbMesh, stalkMesh];
     const raycaster = new THREE.Raycaster();
     const pointerNdc = new THREE.Vector2();
 
@@ -695,7 +710,12 @@ const RobotMascot = ({
     let isHoveringRobot = false;
     let timeSinceMove = CURSOR_IDLE_DELAY;
 
-    function updateHover(clientX, clientY) {
+    function updateHover(clientX, clientY, target) {
+      if (target && target !== renderer.domElement) {
+        isHoveringRobot = false;
+        renderer.domElement.style.cursor = '';
+        return;
+      }
       const rect = renderer.domElement.getBoundingClientRect();
       if (rect.width <= 0 || rect.height <= 0) return;
       pointerNdc.x = ((clientX - rect.left) / rect.width) * 2 - 1;
@@ -708,6 +728,8 @@ const RobotMascot = ({
       } else {
         isHoveringRobot = false;
       }
+      renderer.domElement.style.cursor =
+        isHoveringRobot && !splashRef.current ? 'pointer' : '';
     }
 
     const onMouseMove = (e) => {
@@ -716,20 +738,25 @@ const RobotMascot = ({
         mouse.y = -((e.clientY / window.innerHeight) * 2 - 1);
       }
       timeSinceMove = 0;
-      updateHover(e.clientX, e.clientY);
+      updateHover(e.clientX, e.clientY, e.target);
       if (isHoveringRobot) {
         rippleAmp = Math.min(1.0, rippleAmp + 0.2);
       }
     };
 
     const onClick = (e) => {
-      updateHover(e.clientX, e.clientY);
-      if (!isHoveringRobot) return;
+      if (e.target !== renderer.domElement) return;
+      updateHover(e.clientX, e.clientY, e.target);
+      const isCompactViewport = window.innerWidth < 1024;
+      if (!isHoveringRobot && !isCompactViewport) return;
       timeSinceMove = 0;
       if (pokeTimer > 0.05) {
         funnyTimer = DIZZY_DURATION;
       } else {
         pokeTimer = 0.35;
+      }
+      if (!splashRef.current) {
+        onRobotClickRef.current?.();
       }
     };
 
@@ -755,6 +782,7 @@ const RobotMascot = ({
 
       timeSinceMove += dt;
       const isSplash = splashRef.current;
+      const isChatOpen = chatOpenRef.current;
       const isTracking = timeSinceMove < CURSOR_IDLE_DELAY;
 
       const targetLookX = isTracking ? mouse.x : 0;
@@ -793,7 +821,7 @@ const RobotMascot = ({
       annoyedAmount = THREE.MathUtils.damp(annoyedAmount, targetAnnoyed, 3.2, dt);
 
       const targetSleepy =
-        !isSplash && !isTracking && funnyWave <= 0.05 && annoyedAmount <= 0.05 ? 1.0 : 0.0;
+        !isSplash && !isChatOpen && !isTracking && funnyWave <= 0.05 && annoyedAmount <= 0.05 ? 1.0 : 0.0;
       sleepyAmount = THREE.MathUtils.damp(sleepyAmount, targetSleepy, 4.5, dt);
 
       visorSheet.renderVisor({
@@ -803,6 +831,7 @@ const RobotMascot = ({
         sleepy: sleepyAmount,
         tracking: isTracking,
         splashActive: isSplash,
+        chatOpen: isChatOpen,
         time: now,
         dt,
       });
