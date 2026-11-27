@@ -1,0 +1,210 @@
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
+
+import ellipse from "../../assets/ellipse.png";
+import sagmark from "../../assets/sagmark.svg";
+
+gsap.registerPlugin(SplitText);
+
+export default function InnerBanner() {
+  const ellipseRef = useRef(null);
+  const headingRef = useRef(null);
+  const labelRef = useRef(null);
+
+  useEffect(() => {
+    // Ellipse animation
+    const ellipseTween = gsap.to(ellipseRef.current, {
+      scale: 1.5,
+      duration: 2.2,
+      x: -200,
+      ease: "sine.inOut",
+      repeat: -1,
+      yoyo: true,
+    });
+
+    // Heading word animation
+    const split = new SplitText(headingRef.current, {
+      type: "words",
+      wordsClass: "word",
+    });
+
+    gsap.from(split.words, {
+      y: 80,
+      opacity: 0,
+      duration: 2,
+      stagger: 0.15,
+      ease: "power3.out",
+    });
+
+    // Continuous gradient text animation
+    const labelTween = gsap.to(labelRef.current, {
+      backgroundPosition: "200% center",
+      duration: 3,
+      ease: "none",
+      repeat: -1,
+    });
+
+    return () => {
+      ellipseTween.kill();
+      labelTween.kill();
+      split.revert();
+    };
+  }, []);
+
+  return (
+    <section className="inner-banner bg-black pb-[150px] pt-[150px] max-3xl:py-[120px] relative overflow-hidden">
+      <div className="container">
+        <div className="inner-banner-content relative z-[1]">
+          <span
+            ref={labelRef}
+            className="inner-banner-label inline-block bg-[linear-gradient(90deg,#DE2D26_19%,#FFFFFF_47%,#DC2D26_70.5%)] bg-[length:200%_100%] bg-clip-text text-transparent"
+          >
+            Automate your Business
+          </span>
+
+          <h1
+            ref={headingRef}
+            className="text-white text-[126px] font-medium uppercase leading-[1.2] font-['OPTIGaucho']"
+          >
+            Services we can <br /> help you with
+          </h1>
+        </div>
+
+        <div className="inner-banner-graphics">
+          <img
+            ref={ellipseRef}
+            src={ellipse}
+            alt="Ellipse"
+            className="absolute top-[-700px] left-1/2 h-[1300px] w-[1300px] -translate-x-1/2"
+          />
+
+          {/* <img
+            src={sagmark}
+            className="absolute bottom-[-100px] right-0"
+            alt=""
+          /> */}
+
+          <div className="bottom-img absolute bottom-[-100px] right-[40px] scale-90 opacity-60">
+            <svg
+              width="937"
+              height="100%"
+              viewBox="0 0 937 724"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M749.738 329.698C749.738 329.698 848.395 488.991 553.811 602.124C553.811 602.124 333.072 681.743 0.573968 608.455C0.573968 608.455 317.139 739.45 649.708 625.62C649.708 625.62 901.414 534.093 847.213 336.477C847.213 336.477 810.695 306.782 749.738 329.698Z"
+                fill="#DC2D26"
+                fill-opacity="0.1"
+                stroke-width="3"
+                stroke="#DC2D26"
+                stroke-opacity="0.5"
+                class="svg-elem-1"
+              ></path>
+              <path
+                d="M767.753 267.737C762.188 279.583 747.952 284.902 735.884 279.231C724.046 273.67 719.049 259.315 724.615 247.469C730.178 235.628 744.419 230.308 756.257 235.87C768.325 241.54 773.317 255.896 767.753 267.737Z"
+                fill="#DC2D26"
+                fill-opacity="0.1"
+                stroke-width="3"
+                stroke="#DC2D26"
+                stroke-opacity="0.5"
+                class="svg-elem-2"
+              ></path>
+              <path
+                d="M785.452 304.972C780.935 314.586 769.437 318.726 759.832 314.213C750.223 309.698 746.074 298.207 750.591 288.592C755.107 278.981 766.601 274.839 776.21 279.354C785.816 283.867 789.968 295.36 785.452 304.972Z"
+                fill="#DC2D26"
+                fill-opacity="0.1"
+                stroke-width="3"
+                stroke="#DC2D26"
+                stroke-opacity="0.5"
+                class="svg-elem-3"
+              ></path>
+              <path
+                d="M736.81 226.741C732.821 235.232 722.642 238.908 714.149 234.918C705.657 230.928 701.985 220.742 705.974 212.252C709.964 203.759 720.147 200.087 728.639 204.077C737.133 208.066 740.801 218.247 736.81 226.741Z"
+                fill="#DC2D26"
+                fill-opacity="0.1"
+                stroke-width="3"
+                stroke="#DC2D26"
+                stroke-opacity="0.5"
+                class="svg-elem-4"
+              ></path>
+              <path
+                d="M730.03 179.631C726.04 188.123 715.857 191.796 707.363 187.806C698.875 183.817 695.198 173.633 699.188 165.14C703.176 156.652 713.365 152.976 721.854 156.964C730.347 160.954 734.019 171.141 730.03 179.631Z"
+                fill="#DC2D26"
+                fill-opacity="0.1"
+                stroke-width="3"
+                stroke="#DC2D26"
+                stroke-opacity="0.5"
+                class="svg-elem-5"
+              ></path>
+              <path
+                d="M761.405 198.194C758.464 204.453 751.137 207.287 744.882 204.348C738.621 201.406 735.902 193.852 738.842 187.593C741.783 181.333 749.333 178.608 755.594 181.55C761.851 184.488 764.346 191.933 761.405 198.194Z"
+                fill="#DC2D26"
+                fill-opacity="0.1"
+                stroke-width="3"
+                stroke="#DC2D26"
+                stroke-opacity="0.5"
+                class="svg-elem-6"
+              ></path>
+              <path
+                d="M830.721 299.782C827.78 306.041 820.229 308.768 813.96 305.823C807.708 302.885 804.982 295.329 807.923 289.071C810.864 282.81 818.312 280.314 824.565 283.251C830.833 286.197 833.663 293.521 830.721 299.782Z"
+                fill="#DC2D26"
+                fill-opacity="0.1"
+                stroke-width="3"
+                stroke="#DC2D26"
+                stroke-opacity="0.5"
+                class="svg-elem-7"
+              ></path>
+              <path
+                d="M780.989 226.217C778.049 232.475 770.489 235.199 764.228 232.257C757.976 229.319 755.473 221.869 758.414 215.61C761.356 209.349 768.689 206.517 774.941 209.455C781.203 212.395 783.931 219.956 780.989 226.217Z"
+                fill="#DC2D26"
+                fill-opacity="0.1"
+                stroke-width="3"
+                stroke="#DC2D26"
+                stroke-opacity="0.5"
+                class="svg-elem-8"
+              ></path>
+              <path
+                d="M838.029 273.204C835.615 278.342 829.705 280.479 824.56 278.061C819.419 275.646 817.059 269.625 819.474 264.486C821.89 259.343 828.135 257.095 833.276 259.51C838.421 261.926 840.445 268.061 838.029 273.204Z"
+                fill="#DC2D26"
+                fill-opacity="0.1"
+                stroke-width="3"
+                stroke="#DC2D26"
+                stroke-opacity="0.5"
+                class="svg-elem-9"
+              ></path>
+              <path
+                d="M646.129 136.393C643.714 141.533 637.471 143.786 632.327 141.369C627.187 138.954 625.166 132.819 627.582 127.679C629.997 122.537 635.903 120.403 641.043 122.818C646.187 125.236 648.545 131.251 646.129 136.393Z"
+                fill="#DC2D26"
+                fill-opacity="0.1"
+                stroke-width="3"
+                stroke="#DC2D26"
+                stroke-opacity="0.5"
+                class="svg-elem-10"
+              ></path>
+              <path
+                d="M694.465 161.83C691.305 167.988 683.75 170.711 677.601 167.545C671.567 164.71 668.841 157.154 671.778 150.904C674.943 144.748 682.499 142.022 688.65 145.185C694.906 148.125 697.405 155.571 694.465 161.83Z"
+                fill="#DC2D26"
+                fill-opacity="0.1"
+                stroke-width="3"
+                stroke="#DC2D26"
+                stroke-opacity="0.5"
+                class="svg-elem-11"
+              ></path>
+              <path
+                d="M821.348 255.274C816.308 266.001 803.509 270.622 792.774 265.579C781.826 260.435 777.196 247.625 782.236 236.898C787.278 226.165 800.199 221.333 811.145 226.476C821.88 231.52 826.391 244.542 821.348 255.274Z"
+                fill="#DC2D26"
+                fill-opacity="0.1"
+                stroke-width="3"
+                stroke="#DC2D26"
+                stroke-opacity="0.5"
+                class="svg-elem-12"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
