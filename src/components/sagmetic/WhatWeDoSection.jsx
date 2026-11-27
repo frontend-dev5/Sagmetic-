@@ -65,19 +65,28 @@ export default function WhatWeDoSection({
   const emblemQuickRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
+const getLabelOnlyChars = (targetText) => {
+  const cleanUpper = String(targetText || "").toUpperCase();
+  // Keep only unique non-space characters from the target label itself
+  const uniqueChars = Array.from(new Set(cleanUpper.replace(/\s+/g, "").split("")));
+  return uniqueChars.length > 0 ? uniqueChars.join("") : cleanUpper;
+};
+
 const scrambleServiceLabel = (index, targetText) => {
   const labelEl = labelRefs.current[index];
   if (!labelEl) return;
 
+  const ownLabelChars = getLabelOnlyChars(targetText);
+
   gsap.killTweensOf(labelEl);
   gsap.to(labelEl, {
-    duration: 1.05, // longer total animation time
+    duration: 0.9,
     ease: "power2.out",
     scrambleText: {
       text: targetText,
-      chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/&#",
-      revealDelay: 0.3, // waits a bit before resolving characters
-      speed: 0.3, // lower = slower character-cycling speed
+      chars: ownLabelChars,
+      revealDelay: 0.22,
+      speed: 0.35,
     },
     overwrite: "auto",
   });
@@ -128,86 +137,98 @@ const scrambleServiceLabel = (index, targetText) => {
     moveHighlightToRow(activeIndex, false);
   }, [activeIndex]);
 
-  useEffect(() => {
-    const root = sectionRef.current;
-    if (!root) return;
+ useEffect(() => {
+  const root = sectionRef.current;
+  if (!root) return;
 
-    const ctx = gsap.context(() => {
-      moveHighlightToRow(0, true);
+  const ctx = gsap.context(() => {
+    moveHighlightToRow(0, true);
 
-      if (emblemRef.current) {
-        emblemQuickRef.current = {
-          x: gsap.quickTo(emblemRef.current, "x", {
-            duration: 0.35,
-            ease: "power2.out",
-          }),
-          y: gsap.quickTo(emblemRef.current, "y", {
-            duration: 0.35,
-            ease: "power2.out",
-          }),
-          rotateY: gsap.quickTo(emblemRef.current, "rotateY", {
-            duration: 0.35,
-            ease: "power2.out",
-          }),
-          rotateX: gsap.quickTo(emblemRef.current, "rotateX", {
-            duration: 0.35,
-            ease: "power2.out",
-          }),
-        };
-      }
-
-      gsap.from('[data-tech-item="true"]', {
-        y: 22,
-        autoAlpha: 0,
-        duration: 0.55,
-        stagger: { amount: 0.35, from: "start" },
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: '[data-tech-grid="true"]',
-          start: "top 85%",
-          once: true,
-        },
+    if (emblemRef.current) {
+      gsap.set(emblemRef.current, {
+        transformPerspective: 800,
+        rotateX: 0,
+        rotateY: 0,
       });
-    }, root);
 
-    const handleResize = () => moveHighlightToRow(activeIndex, true);
-    window.addEventListener("resize", handleResize);
+      emblemQuickRef.current = {
+        x: gsap.quickTo(emblemRef.current, "x", {
+          duration: 0.35,
+          ease: "power2.out",
+        }),
+        y: gsap.quickTo(emblemRef.current, "y", {
+          duration: 0.35,
+          ease: "power2.out",
+        }),
+      };
+    }
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      ctx.revert();
-    };
-  }, []);
+    gsap.from('[data-tech-item="true"]', {
+      y: 22,
+      autoAlpha: 0,
+      duration: 0.55,
+      stagger: { amount: 0.35, from: "start" },
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: '[data-tech-grid="true"]',
+        start: "top 85%",
+        once: true,
+      },
+    });
+  }, root);
+
+  const handleResize = () => moveHighlightToRow(activeIndex, true);
+  window.addEventListener("resize", handleResize);
+
+  return () => {
+    window.removeEventListener("resize", handleResize);
+    ctx.revert();
+  };
+}, []);
 
   const handleRowHover = (idx, service) => {
     setActiveIndex(idx);
     scrambleServiceLabel(idx, service.label);
   };
 
-  const handleListMouseMove = (e) => {
-    const q = emblemQuickRef.current;
-    const listEl = listWrapRef.current;
-    if (!q || !listEl) return;
+const handleListMouseMove = (e) => {
+  const q = emblemQuickRef.current;
+  const listEl = listWrapRef.current;
+  const emblemEl = emblemRef.current;
+  if (!q || !listEl || !emblemEl) return;
 
-    const rect = listEl.getBoundingClientRect();
-    const normX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-    const normY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+  const rect = listEl.getBoundingClientRect();
+  const normX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+  const normY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
 
-    q.x(normX * 14);
-    q.y(normY * 10);
-    q.rotateY(normX * 12);
-    q.rotateX(-normY * 10);
-  };
+  q.x(normX * 14);
+  q.y(normY * 10);
 
-  const handleListMouseLeave = () => {
-    const q = emblemQuickRef.current;
-    if (!q) return;
-    q.x(0);
-    q.y(0);
-    q.rotateY(0);
-    q.rotateX(0);
-  };
+  gsap.to(emblemEl, {
+    rotateY: normX * 12,
+    rotateX: -normY * 10,
+    duration: 0.35,
+    ease: "power2.out",
+    overwrite: "auto",
+  });
+};
 
+const handleListMouseLeave = () => {
+  const q = emblemQuickRef.current;
+  const emblemEl = emblemRef.current;
+  if (!q || !emblemEl) return;
+
+  q.x(0);
+  q.y(0);
+
+  gsap.to(emblemEl, {
+    rotateY: 0,
+    rotateX: 0,
+    duration: 0.35,
+    ease: "power2.out",
+    overwrite: "auto",
+  });
+};
   const currentService = services[activeIndex] || services[0];
 
   return (

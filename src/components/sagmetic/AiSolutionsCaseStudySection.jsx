@@ -202,7 +202,7 @@ export default function AiSolutionsCaseStudySection({
       className="relative z-10 w-full overflow-x-clip bg-[#050303] text-[#FFFFFF] pt-36 pb-20 lg:pt-48 lg:pb-28"
     >
       {/* Subtle circuit line continuing down into the section */}
-      <svg
+      {/* <svg
         aria-hidden="true"
         viewBox="0 0 1600 900"
         preserveAspectRatio="none"
@@ -223,7 +223,7 @@ export default function AiSolutionsCaseStudySection({
           strokeWidth="2"
           strokeLinecap="round"
         />
-      </svg>
+      </svg> */}
 
       <div
         ref={pinWrapRef}

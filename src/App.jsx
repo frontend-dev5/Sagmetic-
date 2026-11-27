@@ -1,3 +1,9 @@
+import { useEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
+import "lenis/dist/lenis.css";
 
 // import './App.css'
 // import './plush/face.css'
@@ -23,6 +29,7 @@
 // import ContactAndFooterSection from './components/sagmetic/ContactAndFooterSection'
 // import FloatingMascotDock from './components/sagmetic/FloatingMascotDock'
 
+gsap.registerPlugin(ScrollTrigger);
 
 // export default function App() {
 //   const [active, setActive] = useState('robot');

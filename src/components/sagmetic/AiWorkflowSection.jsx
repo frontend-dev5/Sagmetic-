@@ -172,8 +172,8 @@ export default function AiWorkflowSection({
             ease: "none",
             scrollTrigger: {
               trigger: workflowBlockRef.current,
-              start: "top 78%",
-              end: "bottom 25%",
+              start: "top 25%",
+              end: "bottom 75%",
               scrub: 0.65,
               invalidateOnRefresh: true,
             },

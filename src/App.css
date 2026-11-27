@@ -1,6 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Montserrat:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
+body {
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.2;
+}
+
+@theme {
+  --breakpoint-3xl: 1599px;
+  --breakpoint-2xl: 1199px;
+  --breakpoint-xl: 991px;
+  --breakpoint-lg: 767px;
+  --breakpoint-md: 575px;
+}
+
 @font-face {
   font-family: 'OPTIGaucho';
   src: url('/fonts/OPTIGaucho/OPTIGaucho.otf') format('opentype');
@@ -61,8 +82,6 @@
 .sagmetic-marquee-wrap:hover .sagmetic-marquee-track {
   animation-play-state: paused;
 }
-
-
 
 @keyframes statsMarquee {
   0% {

@@ -47,8 +47,27 @@ const FOOTER_COLUMNS = [
   },
 ];
 
+const DEFAULT_SOCIAL_ICONS = [
+  {
+    name: "Facebook",
+    href: "#facebook",
+    src: "/images/facebook.png",
+  },
+  {
+    name: "Instagram",
+    href: "#instagram",
+    src: "/images/insta.png",
+  },
+  {
+    name: "LinkedIn",
+    href: "#linkedin",
+    src: "/images/linkedin.png",
+  },
+];
+
 export default function ContactAndFooterSection({
   sideBoxBgImage = "/images/contact-side-bg.png",
+  socialIcons = DEFAULT_SOCIAL_ICONS,
   onSubmitForm,
 }) {
   const sectionRef = useRef(null);
@@ -222,15 +241,6 @@ export default function ContactAndFooterSection({
             style={{ borderColor: "rgba(255, 255, 255, 0.14)" }}
             className="relative w-full max-w-[460px] xl:w-[460px] min-h-[440px] sm:h-[538px] shrink-0 rounded-[25px] border bg-[#120606] px-8 sm:px-10 py-10 sm:py-12 flex flex-col justify-between overflow-hidden will-change-transform"
           >
-            {/* Optional subtle background image + crimson/dark gradient wash */}
-            {sideBoxBgImage && (
-              <img
-                src={sideBoxBgImage}
-                alt=""
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 w-full h-full object-cover object-center opacity-35"
-              />
-            )}
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-0"
