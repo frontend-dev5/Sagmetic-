@@ -47,8 +47,27 @@ const FOOTER_COLUMNS = [
   },
 ];
 
+const DEFAULT_SOCIAL_ICONS = [
+  {
+    name: "Facebook",
+    href: "#facebook",
+    src: "/images/facebook.png",
+  },
+  {
+    name: "Instagram",
+    href: "#instagram",
+    src: "/images/insta.png",
+  },
+  {
+    name: "LinkedIn",
+    href: "#linkedin",
+    src: "/images/linkedin.png",
+  },
+];
+
 export default function ContactAndFooterSection({
   sideBoxBgImage = "/images/contact-side-bg.png",
+  socialIcons = DEFAULT_SOCIAL_ICONS,
   onSubmitForm,
 }) {
   const sectionRef = useRef(null);
@@ -222,15 +241,6 @@ export default function ContactAndFooterSection({
             style={{ borderColor: "rgba(255, 255, 255, 0.14)" }}
             className="relative w-full max-w-[460px] xl:w-[460px] min-h-[440px] sm:h-[538px] shrink-0 rounded-[25px] border bg-[#120606] px-8 sm:px-10 py-10 sm:py-12 flex flex-col justify-between overflow-hidden will-change-transform"
           >
-            {/* Optional subtle background image + crimson/dark gradient wash */}
-            {sideBoxBgImage && (
-              <img
-                src={sideBoxBgImage}
-                alt=""
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 w-full h-full object-cover object-center opacity-35"
-              />
-            )}
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-0"
@@ -425,28 +435,27 @@ export default function ContactAndFooterSection({
                 />
               </a>
 
-              <div className="flex items-center gap-2.5">
-                <a
-                  href="#facebook"
-                  aria-label="Facebook"
-                  className="w-7 h-7 rounded-full border border-white/15 hover:border-[#DC2D26] flex items-center justify-center text-[11px] text-zinc-300 hover:text-white transition-colors"
-                >
-                  f
-                </a>
-                <a
-                  href="#instagram"
-                  aria-label="Instagram"
-                  className="w-7 h-7 rounded-full border border-white/15 hover:border-[#DC2D26] flex items-center justify-center text-[11px] text-zinc-300 hover:text-white transition-colors"
-                >
-                  ig
-                </a>
-                <a
-                  href="#linkedin"
-                  aria-label="LinkedIn"
-                  className="w-7 h-7 rounded-full border border-white/15 hover:border-[#DC2D26] flex items-center justify-center text-[11px] text-zinc-300 hover:text-white transition-colors"
-                >
-                  in
-                </a>
+              <div className="flex items-center gap-3">
+                {socialIcons.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    aria-label={item.name}
+                    style={{
+                      width: "45px",
+                      height: "45px",
+                      borderRadius: "25px",
+                      border: "0.5px solid #FFFFFF26",
+                    }}
+                    className="hover:border-[#DC2D26] flex items-center justify-center overflow-hidden transition-colors shrink-0 p-2.5"
+                  >
+                    <img
+                      src={item.src}
+                      alt={item.name}
+                      className="w-full h-full object-contain"
+                    />
+                  </a>
+                ))}
               </div>
             </div>
 

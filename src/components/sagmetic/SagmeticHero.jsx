@@ -37,22 +37,77 @@ const SagmeticHero = ({
   const agencyRef = useRef(null);
   const taglineRef = useRef(null);
 
-  const resolvedDelay =
-    typeof splashDelaySeconds === "number"
-      ? splashDelaySeconds
-      : typeof window !== "undefined" && window.innerWidth >= 1024
-      ? 2.3
-      : 0;
-
   useEffect(() => {
     const rootEl = heroRef.current;
     if (!rootEl) return;
 
-    const ctx = gsap.context(() => {
-      gsap.set('[data-hero-stagger="true"]', {
-        y: 28,
-        opacity: 0,
-      });
+    const isMobile = window.innerWidth < 1024;
+    const canAnimate = isMobile ? true : splashDone;
+    if (!canAnimate) return;
+
+    const desktopDelay =
+      typeof splashDelaySeconds === "number" ? splashDelaySeconds : 2.15;
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(max-width: 1023px)", () => {
+      gsap.fromTo(
+        '[data-hero-stagger="true"]',
+        { y: 24, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.75,
+          stagger: 0.08,
+          delay: 0.05,
+          ease: "power3.out",
+          clearProps: "transform,opacity",
+        }
+      );
+
+      if (taglineRef.current) {
+        gsap.to(taglineRef.current, {
+          duration: 1.4,
+          delay: 0.15,
+          ease: "power2.out",
+          scrambleText: {
+            text: TAGLINE_TEXT,
+            chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ×/&#",
+            revealDelay: 0.2,
+            speed: 0.3,
+          },
+        });
+      }
+    });
+
+    mm.add("(min-width: 1024px)", () => {
+      gsap.fromTo(
+        '[data-hero-stagger="true"]',
+        { y: 28, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.85,
+          stagger: 0.1,
+          delay: desktopDelay,
+          ease: "power3.out",
+          clearProps: "transform,opacity",
+        }
+      );
+
+      if (taglineRef.current) {
+        gsap.to(taglineRef.current, {
+          duration: 1.7,
+          delay: desktopDelay + 0.15,
+          ease: "power2.out",
+          scrambleText: {
+            text: TAGLINE_TEXT,
+            chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ×/&#",
+            revealDelay: 0.25,
+            speed: 0.25,
+          },
+        });
+      }
 
       if (agencyRef.current) {
         gsap.to(agencyRef.current, {
@@ -66,43 +121,10 @@ const SagmeticHero = ({
           },
         });
       }
-    }, rootEl);
+    });
 
-    return () => ctx.revert();
-  }, []);
-
-  useEffect(() => {
-    const rootEl = heroRef.current;
-    if (!rootEl || !splashDone) return;
-
-    const ctx = gsap.context(() => {
-      gsap.to('[data-hero-stagger="true"]', {
-        y: 0,
-        opacity: 1,
-        duration: 0.85,
-        stagger: 0.1,
-        delay: resolvedDelay,
-        ease: "power3.out",
-        clearProps: "transform",
-      });
-
-      if (taglineRef.current) {
-        gsap.to(taglineRef.current, {
-          duration: 1.7,
-          delay: resolvedDelay + 0.15,
-          ease: "power2.out",
-          scrambleText: {
-            text: TAGLINE_TEXT,
-            chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ×/&#",
-            revealDelay: 0.25,
-            speed: 0.25,
-          },
-        });
-      }
-    }, rootEl);
-
-    return () => ctx.revert();
-  }, [splashDone, resolvedDelay]);
+    return () => mm.revert();
+  }, [splashDone, splashDelaySeconds]);
 
   return (
     <section
@@ -120,7 +142,7 @@ const SagmeticHero = ({
         }}
       />
 
-      {/* Interactive SVG AI chip background */}
+      {/* Interactive SVG AI chip background (restored across all viewports) */}
       <AiChipCurrentBg triggerRef={heroRef} />
 
       {/* Pill Navigation Bar */}
@@ -190,7 +212,7 @@ const SagmeticHero = ({
       </header>
 
       {/* Center Hero Headline */}
-      <div className="relative z-20 max-w-[1360px] w-full mx-auto px-4 py-12 flex flex-col items-center text-center select-none">
+      <div className="relative z-20 max-w-[1360px] w-full mx-auto px-4 py-12 lg:pb-16 xl:pb-20 2xl:pb-12 flex flex-col items-center text-center select-none">
         <p
           data-hero-stagger="true"
           className="text-[12px] sm:text-[13px] tracking-[0.06em] text-zinc-300 mb-4"
@@ -209,7 +231,7 @@ const SagmeticHero = ({
         </p>
 
         <SplitHeadline
-        splashDone={splashDone}
+          splashDone={splashDone}
           agencyRef={(node) => {
             agencyRef.current = node;
           }}

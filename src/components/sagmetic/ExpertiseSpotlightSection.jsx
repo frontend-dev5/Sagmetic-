@@ -7,7 +7,7 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 export default function ExpertiseSpotlightSection({
   imageSrc = "/images/section4.png",
-  badgeText = "AI • Development",
+  badgeText = "AI + Development",
   headingText = "Web & Mobile Development",
   descriptionText =
     "Build intelligent, scalable and high-performance web and mobile apps with modern tech and AI-powered capabilities like automation, content generation and smart personalization.",
@@ -291,21 +291,17 @@ export default function ExpertiseSpotlightSection({
               {/* Tag Box: 195px x 40px, radius 3px, border 0.5px (#DC2D266B 42%, #DC2D261A 10%), bg (#DE2D26, #FFFFFF) */}
               <div
                 data-spotlight-badge="true"
-                className="w-[195px] h-[40px] rounded-[3px] p-[0.5px] flex items-center justify-center"
-                style={{
-                  background:
-                    "linear-gradient(90deg, rgba(220,45,38,0.42) 0%, rgba(220,45,38,0.10) 100%)",
-                }}
+                className="w-[195px] h-[40px] rounded-[3px] p-[0.5px] flex items-center"
+                // style={{
+                //   background:
+                //     "linear-gradient(90deg, rgba(220,45,38,0.42) 0%, rgba(220,45,38,0.10) 100%)",
+                // }}
               >
                 <div
-                  className="w-full h-full rounded-[2.5px] flex items-center justify-center px-2"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, #DE2D26 0%, #FFFFFF 100%)",
-                  }}
+                  className="w-full h-full rounded-[2.5px] flex items-center justify-center px-2  backdrop-blur-md"
                 >
                   <span
-                    className="text-[#FFFFFF] truncate"
+                    className="text-[#DC2D26] truncate"
                     style={{
                       fontFamily: "'Montserrat', sans-serif",
                       fontWeight: 600,

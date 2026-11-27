@@ -78,7 +78,7 @@ export default function AboutSagmeticSection({
     if (!root) return;
 
     let isCancelled = false;
-    let ctx;
+    let mm;
 
     const init = async () => {
       if (document.fonts?.ready) {
@@ -86,7 +86,9 @@ export default function AboutSagmeticSection({
       }
       if (isCancelled) return;
 
-      ctx = gsap.context(() => {
+      mm = gsap.matchMedia();
+
+      const buildTimeline = (scrollTriggerConfig, isCompact) => {
         const splitH1 = SplitText.create(headingLine1Ref.current, {
           type: "chars",
         });
@@ -123,12 +125,12 @@ export default function AboutSagmeticSection({
         });
 
         gsap.set('[data-about-eyebrow="true"]', {
-          y: 16,
+          y: 14,
           autoAlpha: 0,
         });
 
         gsap.set(headingChars, {
-          y: 26,
+          y: isCompact ? 18 : 26,
           autoAlpha: 0,
         });
 
@@ -138,29 +140,23 @@ export default function AboutSagmeticSection({
         });
 
         gsap.set('[data-about-cta="true"]', {
-          y: 22,
+          y: 18,
           autoAlpha: 0,
         });
 
         gsap.set(archCardRef.current, {
-          y: 44,
-          scale: 0.95,
+          y: isCompact ? 28 : 44,
+          scale: 0.96,
           autoAlpha: 0,
         });
 
-        // Box items appear from the right
         gsap.set('[data-about-cap="true"]', {
-          x: 58,
+          x: isCompact ? 32 : 58,
           autoAlpha: 0,
         });
 
         const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: root,
-            start: "top 78%",
-            end: "bottom 35%",
-            scrub: 0.65,
-          },
+          scrollTrigger: scrollTriggerConfig,
         });
 
         if (incomingTraceRef.current) {
@@ -168,8 +164,8 @@ export default function AboutSagmeticSection({
             incomingTraceRef.current,
             {
               strokeDashoffset: 0,
-              duration: 0.25,
-              ease: "none",
+              duration: isCompact ? 0.35 : 0.25,
+              ease: "power2.out",
             },
             0
           );
@@ -180,18 +176,18 @@ export default function AboutSagmeticSection({
           {
             y: 0,
             autoAlpha: 1,
-            duration: 0.18,
+            duration: isCompact ? 0.35 : 0.18,
             ease: "power2.out",
           },
-          0.08
+          0.04
         ).to(
           eyebrowLineRef.current,
           {
             scaleX: 1,
-            duration: 0.25,
+            duration: isCompact ? 0.45 : 0.25,
             ease: "power2.out",
           },
-          0.1
+          0.06
         );
 
         tl.to(
@@ -199,32 +195,32 @@ export default function AboutSagmeticSection({
           {
             y: 0,
             autoAlpha: 1,
-            duration: 0.35,
-            stagger: { each: 0.012, from: "start" },
+            duration: isCompact ? 0.48 : 0.35,
+            stagger: { each: isCompact ? 0.008 : 0.012, from: "start" },
             ease: "power3.out",
           },
-          0.16
+          0.1
         )
           .to(
             paraLines,
             {
               yPercent: 0,
               autoAlpha: 1,
-              duration: 0.28,
-              stagger: 0.07,
+              duration: isCompact ? 0.45 : 0.28,
+              stagger: isCompact ? 0.06 : 0.07,
               ease: "power3.out",
             },
-            0.28
+            0.22
           )
           .to(
             '[data-about-cta="true"]',
             {
               y: 0,
               autoAlpha: 1,
-              duration: 0.22,
+              duration: isCompact ? 0.4 : 0.22,
               ease: "power2.out",
             },
-            0.38
+            0.34
           );
 
         tl.to(
@@ -233,32 +229,31 @@ export default function AboutSagmeticSection({
             y: 0,
             scale: 1,
             autoAlpha: 1,
-            duration: 0.35,
+            duration: isCompact ? 0.5 : 0.35,
             ease: "power3.out",
           },
-          0.24
+          isCompact ? 0.28 : 0.2
         ).to(
           '[data-about-cap="true"]',
           {
             x: 0,
             autoAlpha: 1,
-            duration: 0.3,
-            stagger: 0.06,
+            duration: isCompact ? 0.4 : 0.3,
+            stagger: 0.05,
             ease: "power3.out",
           },
-          0.34
+          isCompact ? 0.36 : 0.28
         );
 
-        // Sideline touches bottom of the box and runs through the bottom spacing with zero gap
         if (sideLineRef.current) {
           tl.to(
             sideLineRef.current,
             {
               strokeDashoffset: 0,
-              duration: 0.3,
-              ease: "none",
+              duration: isCompact ? 0.45 : 0.3,
+              ease: "power2.out",
             },
-            0.42
+            isCompact ? 0.42 : 0.36
           );
         }
 
@@ -267,14 +262,39 @@ export default function AboutSagmeticSection({
           splitH2.revert();
           splitPara.revert();
         };
-      }, root);
+      };
+
+      // Mobile & Laptop (< 1280px): triggers immediately on entry and finishes quickly without scroll lag
+      mm.add("(max-width: 1279px)", () =>
+        buildTimeline(
+          {
+            trigger: root,
+            start: "top 86%",
+            once: true,
+          },
+          true
+        )
+      );
+
+      // Large Desktop (>= 1280px): scrubbed reveal with tighter scroll end so text finishes while in view
+      mm.add("(min-width: 1280px)", () =>
+        buildTimeline(
+          {
+            trigger: root,
+            start: "top 82%",
+            end: "top 20%",
+            scrub: 0.5,
+          },
+          false
+        )
+      );
     };
 
     init();
 
     return () => {
       isCancelled = true;
-      ctx?.revert();
+      mm?.revert();
     };
   }, []);
 
