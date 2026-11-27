@@ -5,29 +5,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 
-// import './App.css'
-// import './plush/face.css'
-// import PlushPortrait from './components/PlushPortrait'
-// import IndieApp from './components/indiemaker/IndieApp'
-// import ShibaMascot from './components/Shiba/ShibaMascot'
-// import MochiMascot from './components/mochimascot/MochiMascot'
-// import RobotMascot from './components/robotmascot/RobotMascot'
-// import { useRef, useState } from 'react'
-// import Sagmetic from './components/sagmetic/Sagmetic'
-// import AgencyLogoHero from './components/sagmetic/AgencyHeroSculpture'
-// import SagmeticHero from './components/sagmetic/SagmeticHero'
-// import AiCircuitHeroBg from './components/sagmetic/AiChipCurrentBg'
-// import AboutSagmeticSection from './components/sagmetic/AboutSagmeticSection'
-// import TechnologyExpertiseSection from './components/sagmetic/TechnologyExpertiseSection'
-// import ExpertiseSpotlightSection from './components/sagmetic/ExpertiseSpotlightSection'
-// import AiSolutionsCaseStudySection from './components/sagmetic/AiSolutionsCaseStudySection'
-// import WhatWeDoSection from './components/sagmetic/WhatWeDoSection'
-// import FeaturedWorkSection from './components/sagmetic/FeaturedWorkSection'
-// import AiWorkflowSection from './components/sagmetic/AiWorkflowSection'
-// import StatsAndCtaSection from './components/sagmetic/StatsAndCtaSection'
-// import FaqSection from './components/sagmetic/FaqSection'
-// import ContactAndFooterSection from './components/sagmetic/ContactAndFooterSection'
-// import FloatingMascotDock from './components/sagmetic/FloatingMascotDock'
+import Home from "./components/pages/Home";
+import Services from "./components/pages/Services";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -89,8 +68,24 @@ gsap.registerPlugin(ScrollTrigger);
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Home from "./components/pages/Home";
-import Services from "./components/pages/About";
+  // Jump to top on route change without fighting Lenis
+  useEffect(() => {
+    const lenis = window.__lenis;
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+    ScrollTrigger.refresh();
+  }, [pathname]);
+
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/services" element={<Services />} />
+    </Routes>
+  );
+}
 
 function App() {
   return (
