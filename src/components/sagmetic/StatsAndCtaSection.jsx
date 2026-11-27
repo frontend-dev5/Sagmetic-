@@ -9,125 +9,45 @@ const STAT_CARDS = [
   {
     value: "6+",
     label: "Years of Experince",
-    badgeBg: "#702FFF",
+    badgeBg: "#e2d5ff",
     wrapperOffsetClass: "lg:mt-0",
     fromVars: { x: -165, y: 0, scale: 0.94, autoAlpha: 0 },
-    icon: (
-      <svg
-        viewBox="0 0 28 28"
-        fill="none"
-        className="w-7 h-7 text-white"
-        aria-hidden="true"
-      >
-        <path
-          d="M9 8V6.5C9 5.67 9.67 5 10.5 5H17.5C18.33 5 19 5.67 19 6.5V8M5 9.5C5 8.67 5.67 8 6.5 8H21.5C22.33 8 23 8.67 23 9.5V20.5C23 21.33 22.33 22 21.5 22H6.5C5.67 22 5 21.33 5 20.5V9.5Z"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M5 13.5H23"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
+    iconSrc: "/images/experience.png",
+    iconAlt: "Years of Experience icon",
   },
   {
     value: "35+",
     label: "Skilled Professionals",
-    badgeBg: "#FF8A5B",
+    badgeBg: "#FFE8DE",
     wrapperOffsetClass: "mt-6 sm:mt-12 lg:mt-20",
     fromVars: { x: 0, y: 145, scale: 0.94, autoAlpha: 0 },
-    icon: (
-      <svg
-        viewBox="0 0 28 28"
-        fill="none"
-        className="w-7 h-7 text-white"
-        aria-hidden="true"
-      >
-        <circle cx="11.5" cy="10" r="3.5" stroke="currentColor" strokeWidth="2" />
-        <path
-          d="M5 21.5C5 18.46 7.91 16 11.5 16C15.09 16 18 18.46 18 21.5"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M17.5 8.5C19.43 8.5 21 10.07 21 12C21 13.55 19.99 14.86 18.6 15.32M19.5 16.5C21.71 16.95 23.5 18.8 23.5 21.2"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
+    iconSrc: "/images/professionals.png",
+    iconAlt: "Skilled Professionals icon",
   },
   {
     value: "3.6K",
     label: "Projects Worldwide",
-    badgeBg: "#007AFF",
+    badgeBg: "#CCE4FF",
     wrapperOffsetClass: "lg:mt-0",
     fromVars: { x: 0, y: -145, scale: 0.94, autoAlpha: 0 },
-    icon: (
-      <svg
-        viewBox="0 0 28 28"
-        fill="none"
-        className="w-7 h-7 text-white"
-        aria-hidden="true"
-      >
-        <path
-          d="M19.5 5.5C19.5 5.5 22.5 8.5 22.5 14C22.5 16.5 21.6 18.8 20.2 20.5L17.5 17.8L10.2 10.5L7.5 7.8C9.2 6.4 11.5 5.5 14 5.5H19.5Z"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinejoin="round"
-        />
-        <circle cx="16.5" cy="11.5" r="1.5" fill="currentColor" />
-        <path
-          d="M9.5 15.5L6.5 16.5L5.5 22.5L11.5 21.5L12.5 18.5"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    ),
+    iconSrc: "/images/projects.png",
+    iconAlt: "Projects Worldwide icon",
   },
   {
     value: "95%",
     label: "Affordable Cost",
-    badgeBg: "#5BCC9F",
+    badgeBg: "#DEF5EC",
     wrapperOffsetClass: "mt-6 sm:mt-12 lg:mt-20",
     fromVars: { x: 165, y: 0, scale: 0.94, autoAlpha: 0 },
-    icon: (
-      <svg
-        viewBox="0 0 28 28"
-        fill="none"
-        className="w-7 h-7 text-white"
-        aria-hidden="true"
-      >
-        <path
-          d="M11.5 8.5H16.5L18 6H10L11.5 8.5ZM11.5 8.5C8.5 10.5 7 13.5 7 17.5C7 20.5 9.5 22.5 14 22.5C18.5 22.5 21 20.5 21 17.5C21 13.5 19.5 10.5 16.5 8.5"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M14 12.5V18.5M16 14C16 13.17 15.1 12.5 14 12.5C12.9 12.5 12 13.17 12 14C12 15.5 16 15.2 16 17C16 17.83 15.1 18.5 14 18.5C12.9 18.5 12 17.83 12 17"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-      </svg>
-    ),
+    iconSrc: "/images/cost.png",
+    iconAlt: "Affordable Cost icon",
   },
 ];
 
 export default function StatsAndCtaSection({
   ctaBgImage = "/images/ctabg.png",
   onConsultationClick,
+  statCards = STAT_CARDS,
 }) {
   const sectionRef = useRef(null);
   const statsRowRef = useRef(null);
@@ -196,7 +116,7 @@ export default function StatsAndCtaSection({
             },
           });
 
-          STAT_CARDS.forEach((card, idx) => {
+          statCards.forEach((card, idx) => {
             const el = cardRefs.current[idx];
             if (!el) return;
 
@@ -342,7 +262,7 @@ export default function StatsAndCtaSection({
       isCancelled = true;
       ctx?.revert();
     };
-  }, []);
+  }, [statCards]);
 
   return (
     <section
@@ -365,7 +285,7 @@ export default function StatsAndCtaSection({
           ref={statsRowRef}
           className="flex flex-wrap xl:flex-nowrap items-start justify-center gap-6 lg:gap-8 py-4 lg:py-8"
         >
-          {STAT_CARDS.map((card, idx) => (
+          {statCards.map((card, idx) => (
             <div
               key={card.label}
               className={`w-full max-w-[331px] sm:w-[331px] shrink-0 ${card.wrapperOffsetClass}`}
@@ -379,9 +299,13 @@ export default function StatsAndCtaSection({
                 {/* Icon Badge: 67px x 67px */}
                 <div
                   style={{ backgroundColor: card.badgeBg }}
-                  className="w-[67px] h-[67px] rounded-full flex items-center justify-center shadow-sm mb-6"
+                  className="w-[67px] h-[67px] rounded-full flex items-center justify-center shadow-sm mb-6 p-3.5"
                 >
-                  {card.icon}
+                  <img
+                    src={card.iconSrc}
+                    alt={card.iconAlt || card.label}
+                    className="w-full h-full object-contain"
+                  />
                 </div>
 
                 {/* Number: Futura Now Headline, weight=700, size=60px, lh=100%, ls=0% */}

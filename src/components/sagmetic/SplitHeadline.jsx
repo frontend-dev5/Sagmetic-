@@ -12,13 +12,17 @@ export default function SplitHeadline({ agencyRef, splashDone = true }) {
 
   useEffect(() => {
     const root = headingRef.current;
-    if (!root || !splashDone) return;
+    if (!root) return;
 
+    const isMobile = window.innerWidth < 1024;
+    const canAnimate = isMobile ? true : splashDone;
+    if (!canAnimate) return;
+
+    let cancelled = false;
     let ctx;
     let splitLine1;
     let splitLine2;
     let splitSerif;
-    let cancelled = false;
 
     const run = async () => {
       if (document.fonts?.ready) {
@@ -62,9 +66,9 @@ export default function SplitHeadline({ agencyRef, splashDone = true }) {
               y: 0,
               opacity: 1,
               visibility: 'visible',
-              duration: 0.75,
-              delay: 0.08,
-              stagger: { each: 0.025, from: 'start' },
+              duration: 0.65,
+              delay: 0.06,
+              stagger: { each: 0.02, from: 'start' },
               ease: 'power3.out',
               clearProps: 'transform,opacity,visibility',
             }
@@ -84,11 +88,14 @@ export default function SplitHeadline({ agencyRef, splashDone = true }) {
     };
   }, [splashDone]);
 
+  const shouldHideBeforeReveal =
+    typeof window !== 'undefined' && window.innerWidth >= 1024 && !splashDone;
+
   return (
     <h1
       ref={headingRef}
-      style={{ opacity: splashDone ? undefined : 0 }}
-      className="overflow-visible font-futura-headline font-extrabold text-white text-[56px] leading-[54px] sm:text-[104px] sm:leading-[96px] lg:text-[166px] lg:leading-[148px]"
+      style={{ opacity: shouldHideBeforeReveal ? 0 : undefined }}
+      className="overflow-visible font-futura-headline font-extrabold text-white text-[56px] leading-[54px] sm:text-[104px] sm:leading-[96px] lg:text-[92px] lg:leading-[84px] xl:text-[112px] xl:leading-[100px] 2xl:text-[166px] 2xl:leading-[148px]"
     >
       <span ref={boldLine1Ref} className="block">
         AI-Powered
@@ -101,7 +108,7 @@ export default function SplitHeadline({ agencyRef, splashDone = true }) {
           serifLineRef.current = node;
           if (agencyRef) agencyRef.current = node;
         }}
-        className="inline-block font-instrument-serif italic font-normal text-[#DE2D26] text-[56px] leading-[54px] sm:text-[104px] sm:leading-[96px] lg:text-[166px] lg:leading-[148px] will-change-transform"
+        className="inline-block font-instrument-serif italic font-normal text-[#DE2D26] text-[56px] leading-[54px] sm:text-[104px] sm:leading-[96px] lg:text-[92px] lg:leading-[84px] xl:text-[112px] xl:leading-[100px] 2xl:text-[166px] 2xl:leading-[148px] will-change-transform"
       >
         Agency
       </span>
