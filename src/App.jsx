@@ -10,45 +10,63 @@ import Services from "./components/pages/Services";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function AppContent() {
-  const { pathname } = useLocation();
+// export default function App() {
+//   const [active, setActive] = useState('robot');
+//   const [splashDone, setSplashDone] = useState(false);
+//   const footerRef = useRef(null);
 
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+//   return (
+//     // <div className="min-h-screen w-full flex flex-col bg-slate-950 text-white">
+//     //   <div className="p-4 flex gap-3 z-10">
+//     //     <button
+//     //       type="button"
+//     //       onClick={() => setActive('shiba')}
+//     //       className={`px-4 py-2 rounded ${active === 'shiba' ? 'bg-amber-500 text-black' : 'bg-slate-800'}`}
+//     //     >
+//     //       Shiba Mascot
+//     //     </button>
+//     //     <button
+//     //       type="button"
+//     //       onClick={() => setActive('robot')}
+//     //       className={`px-4 py-2 rounded ${active === 'robot' ? 'bg-emerald-400 text-black' : 'bg-slate-800'}`}
+//     //     >
+//     //       Robot Mascot
+//     //     </button>
+//     //   </div>
 
-    if (prefersReducedMotion) return;
+//     //   <div className="flex-1 w-full">
+//     //     {active === 'shiba' ? (
+//     //       <ShibaMascot className="w-full h-[calc(100vh-4.5rem)]" />
+//     //     ) : (
+//     //       <RobotMascot className="w-full h-[calc(100vh-4.5rem)]" />
+//     //     )}
+//     //   </div>
+//     // </div>
+//     <>
+//     {/* <Sagmetic/> */}
+//     {/* <AgencyLogoHero/> */}
 
-    const lenis = new Lenis({
-      duration: 1.1,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      syncTouch: false,
-      touchMultiplier: 1,
-    });
+//     <FloatingMascotDock footerRef={footerRef} onSplashComplete={() => setSplashDone(true)}  />
+//     <SagmeticHero splashDone={splashDone}/>
+//     <AboutSagmeticSection/>
+//     <TechnologyExpertiseSection/>
+//     <ExpertiseSpotlightSection/>
+//     <AiSolutionsCaseStudySection/>
+//     <WhatWeDoSection/>
+//     <FeaturedWorkSection/>
+//     <AiWorkflowSection/>
+//     <StatsAndCtaSection/>
+//     <FaqSection/>
+//     <ContactAndFooterSection/>
 
-    window.__lenis = lenis;
+//     {/* <AiCircuitHeroBg/> */}
+//     </>
+//   );
+// }
 
-    lenis.on("scroll", ScrollTrigger.update);
 
-    const updateTicker = (time) => {
-      lenis.raf(time * 1000);
-    };
 
-    gsap.ticker.add(updateTicker);
-    gsap.ticker.lagSmoothing(0);
-    ScrollTrigger.refresh();
-
-    return () => {
-      gsap.ticker.remove(updateTicker);
-      lenis.off("scroll", ScrollTrigger.update);
-      lenis.destroy();
-      if (window.__lenis === lenis) {
-        delete window.__lenis;
-      }
-    };
-  }, []);
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
   // Jump to top on route change without fighting Lenis
   useEffect(() => {
@@ -72,7 +90,10 @@ function AppContent() {
 function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<Services />} />
+      </Routes>
     </BrowserRouter>
   );
 }
