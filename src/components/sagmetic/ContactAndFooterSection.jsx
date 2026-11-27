@@ -414,14 +414,14 @@ export default function ContactAndFooterSection({
           style={{ borderColor: "rgba(255, 255, 255, 0.1)" }}
           className="mt-10 rounded-[25px] border bg-[#070404] px-7 sm:px-12 py-10 sm:py-12 will-change-transform"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10">
+          <div className="grid grid-cols-12 gap-10">
             {/* Brand + Socials */}
-            <div className="lg:col-span-3 flex flex-col justify-between gap-8">
+            <div className="col-span-12 md:col-span-5 lg:col-span-3 flex flex-col justify-between gap-5 lg:gap-8">
               <a href="#home" className="inline-block w-fit">
                 <img
-                  src="/images/logo.png"
+                  src="/images/footer-logo.svg"
                   alt="Sagmetic Infotech"
-                  className="h-12 sm:h-14 w-auto object-contain"
+                  className=" w-auto object-contain"
                 />
               </a>
 
@@ -429,29 +429,38 @@ export default function ContactAndFooterSection({
                 <a
                   href="#facebook"
                   aria-label="Facebook"
-                  className="w-7 h-7 rounded-full border border-white/15 hover:border-[#DC2D26] flex items-center justify-center text-[11px] text-zinc-300 hover:text-white transition-colors"
+                  className="w-[45px] h-[45px] rounded-full border border-white/15 hover:border-[#DC2D26] flex items-center justify-center text-[11px] bg-[#FFFFFF08]  transition-colors"
                 >
-                  f
+                  <img
+                  src="/images/footer-fb.svg"
+                  alt="Facebook Icon"                 
+                />
                 </a>
                 <a
                   href="#instagram"
                   aria-label="Instagram"
-                  className="w-7 h-7 rounded-full border border-white/15 hover:border-[#DC2D26] flex items-center justify-center text-[11px] text-zinc-300 hover:text-white transition-colors"
+                  className="w-[45px] h-[45px] rounded-full border border-white/15 hover:border-[#DC2D26] flex items-center justify-center text-[11px] bg-[#FFFFFF08]  transition-colors"
                 >
-                  ig
+                  <img
+                  src="/images/footer-insta.svg"
+                  alt="Instagram Icon"                 
+                />
                 </a>
                 <a
                   href="#linkedin"
                   aria-label="LinkedIn"
-                  className="w-7 h-7 rounded-full border border-white/15 hover:border-[#DC2D26] flex items-center justify-center text-[11px] text-zinc-300 hover:text-white transition-colors"
+                  className="w-[45px] h-[45px] rounded-full border border-white/15 hover:border-[#DC2D26] flex items-center justify-center text-[11px] bg-[#FFFFFF08]  transition-colors"
                 >
-                  in
+                  <img
+                  src="/images/footer-link.svg"
+                  alt="LinkedIn Icon"                 
+                />
                 </a>
               </div>
             </div>
 
             {/* 4 Link / Contact Columns */}
-            <div className="lg:col-span-9 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="col-span-12 md:col-span-7 lg:col-span-9 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4  gap-8">
               {FOOTER_COLUMNS.map((col) => (
                 <div key={col.title}>
                   {/* Services and other: Montserrat, weight=600, size=20px, lh=30px, ls=0% */}

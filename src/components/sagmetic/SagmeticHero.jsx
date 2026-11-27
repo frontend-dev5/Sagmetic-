@@ -4,8 +4,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import AiChipCurrentBg from "./AiChipCurrentBg";
 import SplitHeadline from "./SplitHeadline";
+import { Menu, X } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin);
+
+
 
 const TAGLINE_TEXT = "Creative × Technology × AI";
 
@@ -32,6 +35,7 @@ const SagmeticHero = ({
   splashDone = true,
   splashDelaySeconds,
 }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const heroRef = useRef(null);
   const agencyRef = useRef(null);
@@ -41,8 +45,8 @@ const SagmeticHero = ({
     typeof splashDelaySeconds === "number"
       ? splashDelaySeconds
       : typeof window !== "undefined" && window.innerWidth >= 1024
-      ? 2.3
-      : 0;
+        ? 2.3
+        : 0;
 
   useEffect(() => {
     const rootEl = heroRef.current;
@@ -124,7 +128,7 @@ const SagmeticHero = ({
       <AiChipCurrentBg triggerRef={heroRef} />
 
       {/* Pill Navigation Bar */}
-      <header className="relative z-30 max-w-[1360px] w-full mx-auto px-4 pt-6">
+      {/* <header className="relative z-30 max-w-[1360px] w-full mx-auto px-4 pt-6">
         <nav className="flex items-center justify-between rounded-full border border-white/[0.09] bg-[#0d0707]/80 px-5 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.65)]">
           <a href="#home" className="flex items-center gap-2.5">
             <img className="md:w-auto w-50" src="/images/logo.png" alt="logo" />
@@ -187,7 +191,164 @@ const SagmeticHero = ({
             Contact Us
           </button>
         </nav>
+      </header> */}
+
+      <header className="relative z-30 max-w-[1360px] w-full mx-auto px-4 pt-6">
+        <nav className="relative flex items-center justify-between rounded-full border border-white/[0.09] bg-[#0d0707]/90 px-5 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.65)]">
+
+          {/* Logo */}
+          <a
+            href="#home"
+            className="flex items-center gap-2.5"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <img
+              className="md:w-auto w-50"
+              src="/images/logo.png"
+              alt="logo"
+            />
+          </a>
+
+          {/* Desktop Navigation */}
+          <ul className="hidden lg:flex items-center gap-7 text-[12px] font-medium text-zinc-400">
+            {NAV_ITEMS.map((item) => (
+              <li key={item.label} className="relative">
+                {item.hasDropdown ? (
+                  <button
+                    type="button"
+                    onClick={() => setServicesOpen((prev) => !prev)}
+                    className="inline-flex items-center gap-1 hover:text-white transition cursor-pointer"
+                  >
+                    <span>{item.label}</span>
+                    <span className="text-[10px]">⌄</span>
+                  </button>
+                ) : (
+                  <a
+                    href={item.href}
+                    className={`transition ${item.active ? "text-white" : "hover:text-white"
+                      }`}
+                  >
+                    {item.label}
+                  </a>
+                )}
+
+                {item.hasDropdown && servicesOpen && (
+                  <div className="absolute left-0 top-8 w-52 rounded-xl border border-white/10 bg-zinc-950 p-2 text-xs text-zinc-300 shadow-xl">
+                    <a href="#services" className="block rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white">
+                      AI &amp; Automation
+                    </a>
+                    <a href="#services" className="block rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white">
+                      Creative &amp; Brand
+                    </a>
+                    <a href="#services" className="block rounded-lg px-3 py-2 hover:bg-white/5 hover:text-white">
+                      Web &amp; Product Engineering
+                    </a>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          {/* Desktop Contact Button */}
+          <button
+            type="button"
+            onClick={onContactClick}
+            className="hidden lg:block rounded-full bg-[#DE2D26] hover:bg-[#c6241e] px-5 py-2 text-[12px] font-medium text-white transition cursor-pointer"
+          >
+            Contact Us
+          </button>
+
+          {/* Mobile Hamburger Button */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
+            className="lg:hidden flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition hover:bg-white/10"
+          >
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+
+          {/* Mobile Navigation */}
+          {mobileMenuOpen && (
+            <div className="absolute left-0 right-0 top-[calc(100%+12px)] lg:hidden rounded-2xl border border-white/10 bg-[#0d0707] p-5 shadow-2xl">
+
+              <ul className="flex flex-col gap-1 text-sm font-medium text-zinc-300">
+
+                {NAV_ITEMS.map((item) => (
+                  <li key={item.label}>
+
+                    {item.hasDropdown ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => setServicesOpen((prev) => !prev)}
+                          className="flex w-full items-center justify-between rounded-lg px-3 py-3 hover:bg-white/5 hover:text-white"
+                        >
+                          {item.label}
+                          <span>{servicesOpen ? "−" : "+"}</span>
+                        </button>
+
+                        {servicesOpen && (
+                          <div className="ml-3 flex flex-col border-l border-white/10 pl-3 text-zinc-400">
+                            <a
+                              href="#services"
+                              onClick={() => setMobileMenuOpen(false)}
+                              className="rounded-lg px-3 py-2 hover:text-white"
+                            >
+                              AI &amp; Automation
+                            </a>
+
+                            <a
+                              href="#services"
+                              onClick={() => setMobileMenuOpen(false)}
+                              className="rounded-lg px-3 py-2 hover:text-white"
+                            >
+                              Creative &amp; Brand
+                            </a>
+
+                            <a
+                              href="#services"
+                              onClick={() => setMobileMenuOpen(false)}
+                              className="rounded-lg px-3 py-2 hover:text-white"
+                            >
+                              Web &amp; Product Engineering
+                            </a>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <a
+                        href={item.href}
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={`block rounded-lg px-3 py-3 transition hover:bg-white/5 hover:text-white ${item.active ? "text-white" : ""
+                          }`}
+                      >
+                        {item.label}
+                      </a>
+                    )}
+
+                  </li>
+                ))}
+              </ul>
+
+              {/* Mobile Contact Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onContactClick();
+                }}
+                className="mt-4 w-full rounded-full bg-[#DE2D26] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#c6241e]"
+              >
+                Contact Us
+              </button>
+
+            </div>
+          )}
+        </nav>
       </header>
+
 
       {/* Center Hero Headline */}
       <div className="relative z-20 max-w-[1360px] w-full mx-auto px-4 py-12 flex flex-col items-center text-center select-none">
@@ -209,7 +370,7 @@ const SagmeticHero = ({
         </p>
 
         <SplitHeadline
-        splashDone={splashDone}
+          splashDone={splashDone}
           agencyRef={(node) => {
             agencyRef.current = node;
           }}
