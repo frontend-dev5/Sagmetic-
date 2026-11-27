@@ -6,6 +6,8 @@ import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 
 import Home from "./components/pages/Home";
+import Services from "./components/pages/Services";
+import About from "./components/pages/About";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -63,6 +65,9 @@ function AppContent() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/services" element={<Services />} />
+      <Route path="/about" element={<About/>} />
+
     </Routes>
   );
 }
